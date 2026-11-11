@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="same-origin">
+<title>{% block title %}{{ store }} | Moda fitness feminina{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header"><nav class="shell"><a class="wordmark" href="{{ url_for('home') }}">{{ store }}</a><div class="nav-links"><a href="{{ url_for('shop') }}">Coleção</a><a class="bag" href="{{ url_for('basket') }}">Sacola <span>{{ count }}</span></a></div></nav></header>
+<main>
+{% with messages = get_flashed_messages() %}{% if messages %}<div class="shell notices" role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}{% endwith %}
+{% block content %}{% endblock %}
+</main>
+<footer class="shell footer"><a class="wordmark" href="{{ url_for('home') }}">{{ store }}</a><div><a href="{{ url_for('privacy') }}">Privacidade</a>{% if whatsapp %}<a href="https://wa.me/{{ whatsapp }}">WhatsApp</a>{% endif %}{% if contact %}<a href="mailto:{{ contact }}">Contato</a>{% endif %}</div></footer>
+</body>
+</html>

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: forma-preta
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: flask --app app init-db && gunicorn --bind 0.0.0.0:$PORT --timeout 60 app:app
+    healthCheckPath: /saude
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: ASAAS_ENV
+        value: sandbox

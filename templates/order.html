@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Pedido | {{ store }}{% endblock %}
+{% block content %}
+{% set labels = {'creating':'Gerando cobrança', 'pending':'Aguardando pagamento', 'paid':'Pagamento confirmado', 'overdue':'Pagamento vencido', 'refunded':'Pagamento estornado', 'canceled':'Cobrança cancelada', 'disputed':'Pagamento em contestação', 'partial_refund':'Pagamento parcialmente estornado', 'payment_error':'Não foi possível confirmar a criação da cobrança'} %}
+<section class="shell inner narrow"><h1>Seu pedido</h1><p class="notice">{{ labels[order.status] }}</p>
+{% for item in order.items %}<p class="split"><span>{{ item.qty }} × {{ item.name }} · {{ item.size }}</span><strong>{{ (item.qty * item.price)|money }}</strong></p>{% endfor %}
+<p class="split"><span>Entrega · {{ order.delivery.label }}</span><strong>{{ order.delivery.price|money }}</strong></p>
+<p class="split"><strong>Total</strong><strong>{{ order.total|money }}</strong></p>
+{% if order.status in ('pending','overdue') and order.invoice_url %}<a class="button primary" href="{{ order.invoice_url }}" rel="noreferrer">Abrir cobrança no Asaas</a>{% endif %}
+{% if order.status in ('creating','payment_error') %}<p>Atualize a página para consultar o status. Se a cobrança não aparecer, entre em contato com a loja antes de fazer outro pedido.</p>{% endif %}
+<p>Guarde o link desta página para acompanhar o pagamento.</p>
+</section>
+{% endblock %}

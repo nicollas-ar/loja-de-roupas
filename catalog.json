@@ -1,0 +1,5 @@
+{
+  "short": {"name":"Short Fitness", "description":"Short preto de cintura alta em suplex de poliamida.", "price":5990, "width":18, "height":3, "length":24, "weight":0.18},
+  "top": {"name":"Top Fitness", "description":"Top preto em suplex de poliamida.", "price":4990, "width":18, "height":3, "length":24, "weight":0.15},
+  "legging": {"name":"Legging Fitness", "description":"Legging preta de cintura alta em suplex de poliamida.", "price":8990, "width":19, "height":4, "length":25, "weight":0.28}
+}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Área administrativa | {{ store }}{% endblock %}
+{% block content %}
+<section class="shell inner narrow">
+<h1>Área administrativa</h1>
+{% if invalid %}<p class="notice" role="alert">Senha inválida.</p>{% endif %}
+<form method="post">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Senha do painel <input type="password" name="password" autocomplete="current-password" required></label>
+<p><button class="button primary" type="submit">Entrar</button></p>
+</form>
+</section>
+{% endblock %}

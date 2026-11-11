@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero shell">
+<div class="hero-copy"><p class="kicker">Moda fitness feminina</p><h1>Feita para<br>se mover.</h1><p>Short, top e legging em suplex de poliamida. Três peças em preto pra montar seu conjunto.</p><a class="button primary" href="#colecao">Ver coleção <span aria-hidden="true">↗</span></a></div>
+<img class="hero-photo" src="{{ url_for('static', filename='img/legging.webp') }}" alt="Legging fitness preta de cintura alta">
+</section>
+<section class="shell collection" id="colecao">
+<h2>Coleção</h2>
+<div class="products">
+{% for sku, item in catalog.items() %}
+<article class="product">
+<img loading="lazy" src="{{ url_for('static', filename='img/' ~ sku ~ '.webp') }}" alt="{{ item.name }} preto">
+<div class="product-name"><h3>{{ item.name }}</h3><strong>{{ item.price|money }}</strong></div>
+<p>{{ item.description }}</p>
+<form method="post" action="{{ url_for('basket') }}" class="product-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="sku" value="{{ sku }}">
+<input type="hidden" name="action" value="add">
+<label for="size-{{ sku }}">Tamanho<select id="size-{{ sku }}" name="size">{% for size in sizes %}<option>{{ size }}</option>{% endfor %}</select></label>
+<button type="submit" class="button outline">Adicionar à sacola</button>
+</form>
+</article>
+{% endfor %}
+</div>
+</section>
+{% endblock %}

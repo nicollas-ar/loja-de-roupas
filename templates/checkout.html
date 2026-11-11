@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Finalizar compra | {{ store }}{% endblock %}
+{% block content %}
+<section class="shell inner"><h1>Finalizar compra</h1>
+{% if not asaas_ready %}<p class="notice">Os pagamentos online ainda estão indisponíveis.</p>{% elif sandbox %}<p class="notice">Ambiente de teste. Use dados fictícios de teste e não realize pagamentos reais.</p>{% endif %}
+<form method="post" class="checkout-grid">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div>
+<fieldset><legend>Entrega</legend>
+{% if shipping_ready %}<div class="quote-form"><label>CEP <input name="cep" autocomplete="postal-code" inputmode="numeric" maxlength="9" value="{{ form.get('cep','') }}" placeholder="00000-000"></label><button class="button outline" name="action" value="quote" formnovalidate>Calcular frete</button></div>{% endif %}
+{% if not shipping_ready and not options %}<p>Nenhuma modalidade de entrega está disponível no momento.</p>{% endif %}
+{% for option in options %}
+<label class="option"><input type="radio" name="delivery" value="{{ option.id }}" required {% if form.get('delivery') == option.id %}checked{% endif %}><span>{{ option.label }}{% if option.days %}<small>{{ option.days }} dia(s) útil(eis) de transporte</small>{% endif %}<small>Total {{ (subtotal + option.price)|money }}</small></span><strong>{{ option.price|money }}</strong></label>
+{% endfor %}
+{% if shipping_ready %}<div class="form-grid">
+{% for field, label, auto in [('street','Rua','address-line1'),('number','Número',''),('complement','Complemento','address-line2'),('district','Bairro',''),('city','Cidade','address-level2'),('state','UF','address-level1')] %}
+<label>{{ label }} <input name="{{ field }}" autocomplete="{{ auto or 'off' }}" maxlength="{{ 2 if field == 'state' else 120 }}" value="{{ form.get(field,'') }}"></label>
+{% endfor %}</div><p>Preencha o endereço para receber o pedido em casa.</p>{% endif %}
+</fieldset>
+<fieldset><legend>Seus dados</legend>
+<div class="form-grid">
+<label>Nome completo<input name="name" autocomplete="name" maxlength="120" required value="{{ form.get('name','') }}"></label>
+<label>E-mail<input type="email" name="email" autocomplete="email" maxlength="150" required value="{{ form.get('email','') }}"></label>
+<label>CPF<input name="cpf" inputmode="numeric" maxlength="14" required></label>
+<label>Celular com DDD<input type="tel" name="phone" autocomplete="tel-national" maxlength="17" required value="{{ form.get('phone','') }}"></label>
+</div>
+</fieldset>
+</div>
+<aside class="summary"><h2>Pagamento</h2><p class="split"><span>Subtotal</span><strong>{{ subtotal|money }}</strong></p>
+<label>Forma de pagamento<select name="method">{% for value, name in payment_methods.items() %}<option value="{{ value }}" {% if form.get('method') == value %}selected{% endif %}>{{ name }}</option>{% endfor %}</select></label>
+<p>Você vai pagar na página do Asaas. Veja como tratamos seus dados em <a href="{{ url_for('privacy') }}">Privacidade</a>.</p>
+<button class="button primary" name="action" value="pay" {% if not asaas_ready or not options %}disabled{% endif %}>Gerar cobrança</button>
+</aside></form>
+</section>
+{% endblock %}

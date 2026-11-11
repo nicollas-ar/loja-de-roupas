@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Privacidade | {{ store }}{% endblock %}
+{% block content %}
+<section class="shell inner narrow"><h1>Privacidade</h1>
+<p>A loja usa um cookie de sessão para manter sua sacola e proteger os formulários. Usamos nome, e-mail, celular e, quando há envio, endereço para processar e entregar o pedido.</p>
+<p>O Asaas recebe seus dados de identificação, incluindo CPF, para emitir a cobrança. Os dados do cartão são informados na página do Asaas. Para cotar o frete, enviamos ao Melhor Envio o CEP de destino e os dados do pacote.</p>
+{% if contact %}<p>Para dúvidas ou solicitações sobre seus dados, escreva para <a href="mailto:{{ contact }}">{{ contact }}</a>.</p>{% endif %}
+</section>
+{% endblock %}

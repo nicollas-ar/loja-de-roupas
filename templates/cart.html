@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Sacola | {{ store }}{% endblock %}
+{% block content %}
+<section class="shell inner"><h1>Sacola</h1>
+{% if rows %}<div class="checkout-grid"><div>
+{% for row in rows %}
+<article class="line-item">
+<img src="{{ url_for('static', filename='img/' ~ row.sku ~ '.webp') }}" alt="">
+<div><h2>{{ row.name }}</h2><p>Tamanho {{ row.size }} · {{ row.price|money }} por peça</p>
+<form method="post" class="quantity-form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="sku" value="{{ row.sku }}"><input type="hidden" name="size" value="{{ row.size }}">
+<label>Quantidade <input type="number" name="qty" value="{{ row.qty }}" min="1" max="10"></label>
+<button class="button outline" name="action" value="update">Atualizar</button>
+<button class="text-button" name="action" value="remove">Remover</button>
+</form></div>
+</article>
+{% endfor %}
+</div><aside class="summary"><h2>Resumo</h2><p class="split"><span>Subtotal</span><strong>{{ subtotal|money }}</strong></p><p>Calcule a entrega na próxima etapa.</p><a class="button primary" href="{{ url_for('checkout') }}">Finalizar compra</a></aside></div>
+{% else %}<p>Sua sacola está vazia.</p><a class="button primary" href="{{ url_for('shop') }}">Ver coleção</a>{% endif %}
+</section>
+{% endblock %}

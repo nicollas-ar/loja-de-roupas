@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Pedidos | {{ store }}{% endblock %}
+{% block content %}
+{% set statuses = {'creating':'Gerando cobrança', 'pending':'Aguardando pagamento', 'paid':'Pagamento confirmado', 'overdue':'Vencido', 'refunded':'Estornado', 'canceled':'Cancelado', 'disputed':'Em contestação', 'partial_refund':'Estorno parcial', 'payment_error':'Erro ao criar cobrança'} %}
+<section class="shell inner narrow">
+<h1>{{ 'Detalhes do pedido' if order else 'Pedidos' }}</h1>
+{% if order %}
+<p><a href="{{ url_for('admin') }}">Voltar aos pedidos</a></p>
+<h2>Pagamento</h2>
+<p>{{ statuses.get(order.status, order.status) }} · {{ order.total|money }}</p>
+<p>Código do pedido <code>{{ order.id }}</code></p>
+{% if order.payment_id %}<p>Cobrança Asaas <code>{{ order.payment_id }}</code></p>{% endif %}
+<h2>Cliente</h2>
+<p>{{ order.customer.nome }} · {{ order.customer.email }} · {{ order.customer.celular }}</p>
+<h2>Peças</h2>
+<ul>{% for item in order.items %}<li>{{ item.qty }} × {{ item.name }} · {{ item.size }} · {{ (item.qty * item.price)|money }}</li>{% endfor %}</ul>
+<h2>Entrega</h2>
+<p>{{ order.delivery.label }} · {{ order.delivery.price|money }}</p>
+{% if order.delivery.address %}{% set address = order.delivery.address %}
+<p>{{ address.street }}, {{ address.number }}{% if address.complement %}, {{ address.complement }}{% endif %}<br>{{ address.district }} · {{ address.city }}/{{ address.state }} · {{ address.cep }}</p>
+{% endif %}
+{% elif page.items %}
+{% for item in page.items %}
+<article class="line-item"><div><h2><a href="{{ url_for('admin', pedido=item.id) }}">{{ item.customer.nome }}</a></h2><p>{{ statuses.get(item.status, item.status) }} · {{ item.total|money }} · {{ item.created_at.strftime('%d/%m/%Y') }}</p></div></article>
+{% endfor %}
+<nav class="quantity-form" aria-label="Páginas dos pedidos">
+{% if page.has_prev %}<a href="{{ url_for('admin', page=page.prev_num) }}">Anterior</a>{% endif %}
+{% if page.has_next %}<a href="{{ url_for('admin', page=page.next_num) }}">Próxima</a>{% endif %}
+</nav>
+{% else %}<p>Nenhum pedido registrado.</p>{% endif %}
+<form class="admin-logout" method="post" action="{{ url_for('admin_logout') }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button type="submit" class="button outline">Sair do painel</button>
+</form>
+</section>
+{% endblock %}
